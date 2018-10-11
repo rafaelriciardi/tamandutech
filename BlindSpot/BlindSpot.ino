@@ -1,32 +1,36 @@
 
-int lineFollowSensor1 = A2;
-int lineFollowSensor2 = A3;
-int lineFollowSensor3 = A4;
+#define lineFollowSensor1 A2
+#define lineFollowSensor2 A3
+#define lineFollowSensor3 A4
 
 
-int STBY = 10; //standby
+#define STBY  10 //standby
 
 //Motor A
-int PotA = 6; //Speed control
-int MA1 = 9; //Direction
-int MA2 = 8; //Direction
+#define PotA  6 //Speed control
+#define MA1  9 //Direction
+#define MA2  8 //Direction
 
 //Motor B
-int PotB = 11; //Speed control
-int MB1 = 12; //Direction
-int MB2 = 2; //Direction
-float velb=0;
+#define PotB  11 //Speed control
+#define MB1  12 //Direction
+#define MB2  2 //Direction
+
+#define velMax 150
+
 int LFSensor[5] = {0, 0, 0, 0, 0};
 int Position = 0;
 
 float Kp = 0.13;
 float Kd = 0.24;
 int erro = 0;
-float vel=0;
+float vel_A = 0;
+float vel_B = 0;
 float P = 0;
 float D = 0;
 float previousErro;
 float PD = 0;
+int mediaPB = 700;
 
 unsigned long tempo=0;
 
@@ -48,21 +52,21 @@ void loop () {
   tempo=millis();
 
   LFSensor[1] = analogRead(lineFollowSensor1);
-  if (LFSensor [1] < 800) {
+  if (LFSensor [1] < mediaPB) {
     LFSensor[1] = 1;
   } else {
     LFSensor[1] = 0;
   }
   LFSensor[2] = analogRead(lineFollowSensor2);
 
-  if (LFSensor [2] < 800) {
+  if (LFSensor [2] < mediaPB) {
     LFSensor[2] = 1;
   } else {
     LFSensor[2] = 0;
   }
   LFSensor[3] = analogRead(lineFollowSensor3);
 
-  if (LFSensor [3] < 800) {
+  if (LFSensor [3] < mediaPB) {
     LFSensor[3] = 1;
   } else {
     LFSensor[3] = 0;
@@ -90,20 +94,20 @@ void loop () {
 
 
   PD = ((P * Kp) + (D * Kd));
-  vel= 200+PD; // velocidade base do motor direito
-velb=200-PD;   // velocidade base do motor esquerdo
+  vel_A = 200+PD; // velocidade base do motor direito
+  vel_B = 200-PD;   // velocidade base do motor esquerdo
 
 
-  if (vel > 150) {
-    vel = 150; // velocidade maxima do motor direito
+  if (vel_A > velMax) {
+    vel_A = velMax; // velocidade maxima do motor direito
   }
-  if (velb > 150) {
-    velb = 150; // velocidad maxima do motor esquerdo
+  if (vel_B > velMax) {
+    vel_B = velMax; // velocidad maxima do motor esquerdo
   }
- // Serial.print("velDireita:  ");
-  // Serial.print(vel);
+  // Serial.print("velDireita:  ");
+  // Serial.print(vel_A);
   // Serial.print("velEsquerda:  ");
-  // Serial.print(velb);
+  // Serial.print(vel_B);
   // Serial.println();
 
   digitalWrite(MA1, HIGH);
@@ -112,8 +116,8 @@ velb=200-PD;   // velocidade base do motor esquerdo
   digitalWrite(MB1, LOW);
   digitalWrite(MB2, HIGH);
   
-  analogWrite(PotA, vel);
-  analogWrite(PotB, velb);
+  analogWrite(PotA, vel_A);
+  analogWrite(PotB, vel_B);
 
 if (tempo>=83000){
 
