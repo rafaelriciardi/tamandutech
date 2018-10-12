@@ -16,7 +16,7 @@
 #define MB1  12 //Direction
 #define MB2  2 //Direction
 
-#define velMax 150
+#define velMax 80
 
 int LFSensor[5] = {0, 0, 0, 0, 0};
 int Position = 0;
@@ -30,7 +30,7 @@ float P = 0;
 float D = 0;
 float previousErro;
 float PD = 0;
-int mediaPB = 700;
+int mediaPB = 800;
 
 unsigned long tempo=0;
 
@@ -73,16 +73,16 @@ void loop () {
   }
 
   Position = (((LFSensor[1]*0)+(LFSensor[2]*1000)+(LFSensor[3]*2000))/((LFSensor[1])+(LFSensor[2])+(LFSensor[3])));
-  //Serial.print("   ");
-    //Serial.print(LFSensor[0]);
-    //Serial.print("   ");
-    //Serial.print(LFSensor[1]);
-    //Serial.print("   ");
-    //Serial.print(LFSensor[2]);
-    //Serial.print("   ");
-    //Serial.print(LFSensor[3]);
-    //Serial.print("   ");
-    //Serial.println(LFSensor[4]);
+  Serial.print("   ");
+  Serial.print(LFSensor[0]);
+  Serial.print("   ");
+  Serial.print(LFSensor[1]);
+  Serial.print("   ");
+  Serial.print(LFSensor[2]);
+  Serial.print("   ");
+  Serial.print(LFSensor[3]);
+  Serial.print("   ");
+  Serial.println(LFSensor[4]);
   
 
   erro = Position-1000;
@@ -109,15 +109,6 @@ void loop () {
   // Serial.print("velEsquerda:  ");
   // Serial.print(vel_B);
   // Serial.println();
-
-  digitalWrite(MA1, HIGH);
-  digitalWrite(MA2, LOW);
- 
-  digitalWrite(MB1, LOW);
-  digitalWrite(MB2, HIGH);
-  
-  analogWrite(PotA, vel_A);
-  analogWrite(PotB, vel_B);
 
 if (tempo>=83000){
 
